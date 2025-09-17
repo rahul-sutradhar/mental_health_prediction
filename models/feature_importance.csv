@@ -1,0 +1,17 @@
+feature,importance
+academic_pressure,0.17784083
+social_connectedness,0.15259008
+family_history,0.11627382
+sleep_duration,0.104029976
+physical_activity,0.103999995
+coping_mechanisms,0.095273025
+financial_stress,0.09158554
+dietary_habits,0.050224718
+screen_time,0.028255815
+treatment_history,0.020689866
+residential_status,0.010911515
+gender,0.010664007
+age,0.010391997
+major,0.009702343
+cgpa,0.0096206395
+academic_year,0.0079458235

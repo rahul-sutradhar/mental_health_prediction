@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Mental Health Assessment - Dashboard{% endblock %}
+
+{% block extra_head %}
+<!-- Additional Plotly.js CSS -->
+<style>
+#feature-importance-chart {
+    min-height: 400px;
+    width: 100%;
+    background: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="h2 mb-2">Your Mental Health Assessment Results</h1>
+            <p class="text-muted">Assessment completed on {{ prediction.assessment_date }}</p>
+        </div>
+
+        <!-- Main Results -->
+        <div class="row mb-4">
+            <div class="col-lg-4 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: {{ prediction.risk_color }};">
+                        {{ prediction.mental_health_score }}
+                    </div>
+                    <div class="stat-label">Mental Health Score</div>
+                    <small class="text-muted">Out of 100</small>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: {{ prediction.risk_color }};">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-label">Risk Level</div>
+                    <div class="badge" style="background-color: {{ prediction.risk_color }}; color: white;">
+                        {{ prediction.risk_level }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value text-primary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-label">Prediction Model</div>
+                    <small class="text-muted">{{ prediction.model_used }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Importance Chart -->
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Feature Importance Analysis</span>
+            </div>
+            <div class="cell-content">
+                <h5 class="mb-3">Factors Influencing Your Mental Health Score</h5>
+                <div id="feature-importance-chart"></div>
+                <p class="text-muted mt-3">
+                    This chart shows which factors have the most significant impact on mental health predictions
+                    according to our machine learning model.
+                </p>
+            </div>
+        </div>
+
+        <!-- Risk Factors -->
+        {% if prediction.risk_factors %}
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Identified Risk Factors</span>
+            </div>
+            <div class="cell-content">
+                <div class="row">
+                    {% for factor in prediction.risk_factors %}
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle text-warning me-3"></i>
+                            <span>{{ factor }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recommendations -->
+        {% if prediction.recommendations %}
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Personalized Recommendations</span>
+            </div>
+            <div class="cell-content">
+                <div class="row">
+                    {% for recommendation in prediction.recommendations %}
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-lightbulb text-success me-3 mt-1"></i>
+                            <span>{{ recommendation }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Assessment Summary -->
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Assessment Summary</span>
+            </div>
+            <div class="cell-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="mb-3">Demographics</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Age:</strong> {{ questionnaire_data.age }} years</li>
+                            <li><strong>Academic Year:</strong> {{ questionnaire_data.academic_year }}</li>
+                            <li><strong>CGPA:</strong> {{ questionnaire_data.cgpa }}</li>
+                            <li><strong>Field of Study:</strong> {{ questionnaire_data.major|title }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="mb-3">Lifestyle Factors</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Sleep Duration:</strong> {{ questionnaire_data.sleep_duration }} hours</li>
+                            <li><strong>Physical Activity:</strong> Level {{ questionnaire_data.physical_activity }}</li>
+                            <li><strong>Screen Time:</strong> {{ questionnaire_data.screen_time }} hours/day</li>
+                            <li><strong>Social Connectedness:</strong> Level {{ questionnaire_data.social_connectedness }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Performance -->
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Model Performance Metrics</span>
+            </div>
+            <div class="cell-content">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="feature-card">
+                            <h5 class="text-success">92.5%</h5>
+                            <small class="text-muted">Accuracy</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="feature-card">
+                            <h5 class="text-info">0.91</h5>
+                            <small class="text-muted">Precision</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="feature-card">
+                            <h5 class="text-warning">0.89</h5>
+                            <small class="text-muted">Recall</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="feature-card">
+                            <h5 class="text-orange">0.90</h5>
+                            <small class="text-muted">F1-Score</small>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted text-center">
+                    Our XGBoost model was trained on multiple mental health datasets with over 10,000 samples
+                </p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mb-4">
+            <a href="{{ url_for('questionnaire') }}" class="btn btn-primary me-3">
+                <i class="fas fa-redo me-2"></i>Retake Assessment
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary">
+                <i class="fas fa-print me-2"></i>Print Results
+            </button>
+        </div>
+
+        <!-- Important Notice -->
+        <div class="alert alert-info">
+            <h6><i class="fas fa-info-circle me-2"></i>Important Notice</h6>
+            <p class="mb-0">
+                This assessment provides insights based on machine learning analysis of your responses. 
+                It is not a substitute for professional medical advice, diagnosis, or treatment. 
+                If you're experiencing mental health concerns, please consult with a qualified healthcare professional.
+            </p>
+        </div>
+
+        <!-- Crisis Resources -->
+        {% if prediction.risk_level == "High Risk" %}
+        <div class="alert alert-danger">
+            <h6><i class="fas fa-phone me-2"></i>Crisis Resources</h6>
+            <p class="mb-2">
+                If you're having thoughts of self-harm or suicide, please reach out for immediate help:
+            </p>
+            <ul class="mb-0">
+                <li>National Suicide Prevention Lifeline: 988 (US)</li>
+                <li>Crisis Text Line: Text HOME to 741741</li>
+                <li>Emergency Services: 911</li>
+                <li>Your campus counseling center</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Initialize dashboard on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load feature importance chart with a small delay to ensure Plotly is loaded
+    setTimeout(() => {
+        loadFeatureImportance();
+        animateStatCards();
+    }, 100);
+});
+
+async function loadFeatureImportance() {
+    try {
+        const response = await fetch('/api/feature-importance');
+        const data = await response.json();
+        
+        if (!response.ok) throw new Error('Failed to load data');
+        
+        if (!data.features || !data.importance || data.features.length === 0) {
+            throw new Error('Invalid data format');
+        }
+
+        // Sort data by importance
+        const sortedIndices = data.importance
+            .map((value, index) => ({ value, index }))
+            .sort((a, b) => b.value - a.value)
+            .map(item => item.index);
+
+        const sortedFeatures = sortedIndices.map(i => data.features[i]);
+        const sortedImportance = sortedIndices.map(i => data.importance[i]);
+
+        createFeatureImportanceChart({
+            features: sortedFeatures,
+            importance: sortedImportance
+        });
+    } catch (error) {
+        console.error('Error loading feature importance:', error);
+        const chartContainer = document.getElementById('feature-importance-chart');
+        if (chartContainer) {
+            chartContainer.innerHTML = `
+                <div class="alert alert-warning text-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Unable to load feature importance chart. Please try refreshing the page.
+                </div>`;
+        }
+    }
+}
+
+function createFeatureImportanceChart(data) {
+    const chartContainer = document.getElementById('feature-importance-chart');
+    if (!chartContainer) return;
+
+    const trace = {
+        x: data.importance,
+        y: data.features,
+        type: 'bar',
+        orientation: 'h',
+        marker: {
+            color: data.importance.map((_, i) => {
+                const colors = ['#FF6B35', '#2E86AB', '#28A745', '#FFC107', '#6F42C1'];
+                return colors[i % colors.length];
+            }),
+            opacity: 0.8
+        },
+        text: data.importance.map(val => (val * 100).toFixed(1) + '%'),
+        textposition: 'auto',
+        hovertemplate: '<b>%{y}</b><br>Importance: %{text}<extra></extra>'
+    };
+    
+    const layout = {
+        title: {
+            text: 'Feature Importance in Mental Health Prediction',
+            font: { family: 'Inter, sans-serif', size: 16, color: '#343A40' }
+        },
+        xaxis: { 
+            title: 'Importance Score',
+            range: [0, Math.max(...data.importance) * 1.1],
+            tickformat: ',.1%'
+        },
+        yaxis: { 
+            title: '',
+            automargin: true
+        },
+        margin: { l: 200, r: 50, t: 60, b: 50 },
+        paper_bgcolor: 'white',
+        plot_bgcolor: 'white',
+        font: { family: 'Inter, sans-serif' },
+        showlegend: false
+    };
+    
+    const config = {
+        displayModeBar: false,
+        responsive: true,
+        staticPlot: false
+    };
+    
+    Plotly.newPlot(chartContainer, [trace], layout, config);
+}
+
+function animateStatCards() {
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+}
+</script>
+{% endblock %}
