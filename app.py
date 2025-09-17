@@ -351,5 +351,6 @@ def make_fallback_prediction(questionnaire_data):
 
 if __name__ == '__main__':
     # Production-ready settings
-    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    # debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    debug_mode = True
     app.run(host='0.0.0.0', port=5000, debug=debug_mode)
