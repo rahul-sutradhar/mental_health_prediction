@@ -331,6 +331,7 @@ body {
     margin-bottom: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: slideInRight 0.3s ease-out;
+    border-left: 4px solid;
 }
 
 .alert-success {
@@ -653,7 +654,7 @@ main {
     border-radius: 8px;
     background-color: #f8f9fa;
     margin-bottom: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .review-section dt {
@@ -1008,4 +1009,35 @@ main {
     .d-flex {
         flex-direction: column;
     }
+}
+
+/* Review Section Styles */
+.review-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.review-section-title {
+    color: #2c3e50;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.review-section p {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.review-section strong {
+    color: #495057;
+    min-width: 150px;
+    display: inline-block;
+}
+
+.review-section span {
+    color: #6c757d;
 }

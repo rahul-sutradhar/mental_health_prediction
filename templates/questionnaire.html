@@ -95,8 +95,8 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="cgpa" class="form-label">CGPA/GPA *</label>
-                            <input type="number" class="form-control" id="cgpa" name="cgpa" min="0" max="4" step="0.1" required>
-                            <small class="text-muted">On a 4.0 scale</small>
+                            <input type="number" class="form-control" id="cgpa" name="cgpa" min="0" max="10" step="0.1" required>
+                            <small class="text-muted">On a 10.0 scale</small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="residential_status" class="form-label">Residential Status *</label>
@@ -278,13 +278,62 @@
         <div id="step-3" class="questionnaire-step" style="display: none;">
             <div class="notebook-cell">
                 <div class="cell-header">
-                    <span class="cell-label">Review & Submit</span>
+                    <span class="cell-label">Review Your Responses</span>
                 </div>
                 <div class="cell-content">
                     <h4 class="mb-3">Review Your Responses</h4>
                     <p class="text-muted mb-4">
                         Please review your responses below. You can go back to previous steps to make changes if needed.
                     </p>
+
+                    <!-- Demographics Review -->
+                    <div class="review-section mb-4">
+                        <h5 class="review-section-title">Demographics & Academic Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Age:</strong> <span id="review-age"></span></p>
+                                <p><strong>Gender:</strong> <span id="review-gender"></span></p>
+                                <p><strong>Academic Year:</strong> <span id="review-academic-year"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Field of Study:</strong> <span id="review-major"></span></p>
+                                <p><strong>CGPA/GPA:</strong> <span id="review-cgpa"></span> / 10.0</p>
+                                <p><strong>Residential Status:</strong> <span id="review-residential-status"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lifestyle Review -->
+                    <div class="review-section mb-4">
+                        <h5 class="review-section-title">Lifestyle & Behavioral Factors</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Sleep Duration:</strong> <span id="review-sleep-duration"></span></p>
+                                <p><strong>Dietary Habits:</strong> <span id="review-dietary-habits"></span></p>
+                                <p><strong>Physical Activity:</strong> <span id="review-physical-activity"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Social Connectedness:</strong> <span id="review-social-connectedness"></span></p>
+                                <p><strong>Screen Time:</strong> <span id="review-screen-time"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mental Health Review -->
+                    <div class="review-section mb-4">
+                        <h5 class="review-section-title">Mental Health & Psychological Factors</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Family History:</strong> <span id="review-family-history"></span></p>
+                                <p><strong>Financial Stress:</strong> <span id="review-financial-stress"></span></p>
+                                <p><strong>Academic Pressure:</strong> <span id="review-academic-pressure"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Treatment History:</strong> <span id="review-treatment-history"></span></p>
+                                <p><strong>Coping Mechanisms:</strong> <span id="review-coping-mechanisms"></span></p>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Privacy Notice</h6>

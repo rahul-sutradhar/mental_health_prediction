@@ -164,6 +164,42 @@ document.addEventListener('DOMContentLoaded', function() {
         updateOutput(); // Initial value
     });
     
+    function updateReviewSection() {
+        // Demographics
+        document.getElementById('review-age').textContent = document.getElementById('age').value;
+        document.getElementById('review-gender').textContent = document.getElementById('gender').value;
+        document.getElementById('review-academic-year').textContent = document.getElementById('academic-year').value;
+        document.getElementById('review-major').textContent = document.getElementById('major').value;
+        document.getElementById('review-cgpa').textContent = document.getElementById('cgpa').value;
+        document.getElementById('review-residential-status').textContent = document.getElementById('residential-status').value;
+
+        // Lifestyle
+        document.getElementById('review-sleep-duration').textContent = document.getElementById('sleep-duration').value;
+        document.getElementById('review-dietary-habits').textContent = document.getElementById('dietary-habits').value;
+        document.getElementById('review-physical-activity').textContent = document.getElementById('physical-activity').value;
+        document.getElementById('review-social-connectedness').textContent = document.getElementById('social-connectedness').value;
+        document.getElementById('review-screen-time').textContent = document.getElementById('screen-time').value;
+
+        // Mental Health
+        document.getElementById('review-family-history').textContent = document.getElementById('family-history').value;
+        document.getElementById('review-financial-stress').textContent = document.getElementById('financial-stress').value;
+        document.getElementById('review-academic-pressure').textContent = document.getElementById('academic-pressure').value;
+        document.getElementById('review-treatment-history').textContent = document.getElementById('treatment-history').value;
+        document.getElementById('review-coping-mechanisms').textContent = document.getElementById('coping-mechanisms').value;
+    }
+
+    // Add this to your existing step navigation logic
+    function showStep(step) {
+        // ...existing code...
+        
+        // If showing step 4 (review), update the review section
+        if (step === 4) {
+            updateReviewSection();
+        }
+        
+        // ...existing code...
+    }
+    
     // Initialize the UI
     updateUI();
 });
