@@ -1,0 +1,13 @@
+{
+    "baseline_rmse": 8.245146712380283,
+    "baseline_r2": 0.5213195012784428,
+    "final_rmse": 8.026187917094353,
+    "final_r2": 0.5464056810895599,
+    "best_params": {
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "n_estimators": 400,
+        "subsample": 0.8
+    }
+}

@@ -57,23 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Page Navigation Handling
-window.addEventListener('pageshow', function(event) {
-    // Handle back/forward navigation
-    if (event.persisted) {
-        // Page is loaded from cache (back/forward navigation)
-        window.location.reload();
-    }
-});
-
-// Remove transition classes on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove any leftover transition classes
-    document.querySelectorAll('[class*="transition"]').forEach(element => {
-        element.classList.remove(element.classList.toString().match(/transition\S+/g));
-    });
-});
-
 function initializeApp() {
     // Add smooth scrolling to all links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -125,50 +108,35 @@ function handleNextClick() {
 }
 
 function showStep(step) {
+    // Hide all steps
     document.querySelectorAll('.questionnaire-step').forEach(stepElement => {
         stepElement.style.display = 'none';
     });
     
+    // Show current step
     const currentStepElement = document.getElementById(`step-${step}`);
     if (currentStepElement) {
         currentStepElement.style.display = 'block';
-        // Smooth scroll to top of step
-        currentStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
+    // Update step indicators
     updateStepIndicators();
-    updateNavigationButtons();
-    currentStep = step;
     
-    // Update the step counter text
-    const stepCounter = document.getElementById('current-step');
-    if (stepCounter) {
-        stepCounter.textContent = currentStep + 1;
-    }
+    // Update button visibility
+    updateNavigationButtons();
+    
+    currentStep = step;
 }
 
 function updateStepIndicators() {
-    const steps = document.querySelectorAll('.step');
-    const progressBar = document.querySelector('.progress-bar');
-    const progress = ((currentStep + 1) / totalSteps) * 100;
-    
-    steps.forEach((step, index) => {
+    document.querySelectorAll('.step').forEach((step, index) => {
         step.classList.remove('active', 'completed');
         if (index < currentStep) {
             step.classList.add('completed');
         } else if (index === currentStep) {
             step.classList.add('active');
-            step.querySelector('.step-circle').setAttribute('aria-current', 'step');
-        } else {
-            step.querySelector('.step-circle').removeAttribute('aria-current');
         }
     });
-    
-    // Update progress bar with animation
-    if (progressBar) {
-        progressBar.style.width = `${progress}%`;
-        progressBar.setAttribute('aria-valuenow', progress);
-    }
 }
 
 function updateNavigationButtons() {
@@ -559,6 +527,21 @@ alerts.forEach(alert => {
 // Enable tooltips
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+// Dark mode toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+    });
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+}
 
 // Loading indicator for form submissions
 const showLoading = () => {

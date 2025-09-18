@@ -34,29 +34,11 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    will-change: auto;
-    backface-visibility: hidden;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Override default transitions */
-* {
-    transition: none !important;
-}
-
-/* Only apply transitions to specific interactions */
-.btn-primary:hover,
-.btn-secondary:hover,
-.feature-card:hover,
-.card:hover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-.step-circle,
-.progress-bar {
-    transition: background-color 0.3s ease !important;
+.font-code {
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
 }
 
 /* Accessibility improvements */
@@ -90,12 +72,7 @@ body {
 /* Navbar Styling */
 .navbar {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background: var(--bg-light);
-    position: relative;
-    z-index: 1000;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    will-change: transform;
+    backdrop-filter: blur(10px);
 }
 
 .navbar-brand {
@@ -208,7 +185,7 @@ body {
 
 /* Custom range slider */
 .custom-range {
-    appearance: none;
+    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     border-radius: 4px;
@@ -330,28 +307,29 @@ body {
     margin-bottom: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: slideInRight 0.3s ease-out;
+    backdrop-filter: blur(10px);
 }
 
 .alert-success {
-    background-color: #28A745;
+    background-color: rgba(40, 167, 69, 0.95);
     color: white;
     border-left: 4px solid #1e7e34;
 }
 
 .alert-danger {
-    background-color: #DC3545;
+    background-color: rgba(220, 53, 69, 0.95);
     color: white;
     border-left: 4px solid #bd2130;
 }
 
 .alert-warning {
-    background-color: #FFC107;
+    background-color: rgba(255, 193, 7, 0.95);
     color: #333;
     border-left: 4px solid #d39e00;
 }
 
 .alert-info {
-    background-color: #17A2B8;
+    background-color: rgba(23, 162, 184, 0.95);
     color: white;
     border-left: 4px solid #117a8b;
 }
@@ -415,10 +393,6 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform;
 }
 
 main {
@@ -449,31 +423,35 @@ main {
 @media (max-width: 768px) {
     .alert {
         margin: 0.5rem;
-    }
+    height: 30px;
+    border-radius: 50%;
+    background: var(--border-color);
+    color: var(--text-color);
+    justify-content: center;
 }
 
-/* Step Indicator Styling */
-.step-indicator {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    margin: 2rem 0;
-    padding: 0 10%;
+.step::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background-color: #e9ecef;
+    z-index: -1;
 }
 
-.step {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    z-index: 2;
+.step:last-child::after {
+    display: none;
+}
+
+.step.active::after {
+    background-color: var(--orange-primary);
 }
 
 .step-circle {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-color: #e9ecef;
     color: #6c757d;
@@ -481,97 +459,28 @@ main {
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 1rem;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.step::before {
-    content: '';
-    position: absolute;
-    top: 17px; /* Half of circle height */
-    width: 100%;
-    left: -50%;
-    height: 3px;
-    background: #e9ecef;
-    z-index: 1;
-    transition: all 0.3s ease;
-}
-
-.step:first-child::before {
-    display: none;
+    font-size: 0.9rem;
+    margin: 0 auto;
 }
 
 .step.active .step-circle {
-    background: var(--orange-primary);
+    background-color: var(--orange-primary);
     color: white;
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
 }
 
 .step.completed .step-circle {
-    background: var(--success-green);
+    background-color: var(--success-green);
     color: white;
 }
 
-.step.completed::before {
-    background: var(--success-green);
+.step.active {
+    background: var(--primary-color);
+    color: white;
 }
 
-.step.active::before {
-    background: var(--orange-primary);
-}
-
-.step small {
-    color: #6c757d;
-    font-weight: 500;
-    margin-top: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.step.active small {
-    color: var(--orange-primary);
-    font-weight: 600;
-}
-
-.step.completed small {
-    color: var(--success-green);
-}
-
-/* Progress Bar Styling */
-.progress {
-    height: 8px;
-    margin: 1rem 0;
-    border-radius: 4px;
-    background-color: #e9ecef;
-    overflow: hidden;
-}
-
-.progress-bar {
-    background: linear-gradient(135deg, var(--orange-primary), #ff8659);
-    transition: width 0.6s ease;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(255, 107, 53, 0.2);
-}
-
-/* For smaller screens */
-@media (max-width: 768px) {
-    .step-indicator {
-        padding: 0;
-    }
-    
-    .step small {
-        font-size: 0.7rem;
-    }
-    
-    .step-circle {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-    }
-    
-    .step::before {
-        top: 15px;
-    }
+.step.completed {
+    background: var(--success-color);
+    color: white;
 }
 
 /* Range Slider Styling */
@@ -604,13 +513,11 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 /* Card animations */
@@ -622,13 +529,6 @@ main {
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Page Transition Fix */
-@media (prefers-reduced-motion: no-preference) {
-    .main-content {
-        animation: none !important;
-    }
 }
 
 /* Print styles */

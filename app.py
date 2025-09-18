@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, jsonify, redirect, url_for, make_response
+from flask import Flask, render_template, request, session, jsonify, redirect, url_for
 import os
 import pickle
 import pandas as pd
@@ -10,7 +10,6 @@ import plotly.utils
 import json
 from datetime import datetime
 import uuid
-import traceback
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SESSION_SECRET')
@@ -20,14 +19,6 @@ if not app.secret_key:
 
 # Configure Flask to work with Replit
 app.config['SERVER_NAME'] = None
-
-@app.after_request
-def add_header(response):
-    """Add headers to prevent caching and blurry back navigation"""
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '-1'
-    return response
 
 # Load trained model and scaler
 model = None
@@ -40,36 +31,27 @@ def load_model():
     
     try:
         # Load model
-        with open('./models/xgboost_mental_health_model.pkl', 'rb') as f:
+        with open('./models/xgb_mental_health_model.pkl', 'rb') as f:
             model = pickle.load(f)
-        print("XGBoost model loaded successfully")
         
-        # Load scaler
-        with open('./models/feature_scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-        print("Feature scaler loaded successfully")
+        # # Load scaler
+        # with open('./models/feature_scaler.pkl', 'rb') as f:
+        #     scaler = pickle.load(f)
         
         # Load feature importance
-        feature_importance_df = pd.read_csv('./models/feature_importance.csv')
-        print(f"Loaded feature importance data with shape: {feature_importance_df.shape}")
+        # feature_importance_df = pd.read_csv('./models/feature_importance.csv')
+        # feature_importance_data = {
+        #     'features': feature_importance_df['feature'].tolist()[:5],  # Top 5 features
+        #     'importance': feature_importance_df['importance'].tolist()[:5]
+        # }
         
-        # Format feature names for display
-        def format_feature_name(name):
-            return ' '.join(word.capitalize() for word in name.split('_'))
-        
-        feature_importance_data = {
-            'features': [format_feature_name(feat) for feat in feature_importance_df['feature']],
-            'importance': feature_importance_df['importance'].astype(float).tolist()
-        }
-        print("Feature importance data prepared for API")
+        print("Model loaded successfully!")
         
     except FileNotFoundError as e:
-        print(f"Error: Model files not found: {e}")
-        feature_importance_data = None
+        print(f"Model files not found: {e}")
+        print("Please run train_model.py first to train the model")
     except Exception as e:
-        print(f"Error loading model components: {str(e)}")
-        print("Stack trace:", traceback.format_exc())
-        feature_importance_data = None
+        print(f"Error loading model: {e}")
 
 # Load model on startup
 load_model()
@@ -116,35 +98,14 @@ def dashboard():
 @app.route('/api/feature-importance')
 def feature_importance():
     """API endpoint for feature importance data"""
-    try:
-        if feature_importance_data:
-            # Take top 10 features by importance
-            features = feature_importance_data['features']
-            importance = feature_importance_data['importance']
-            
-            # Sort by importance
-            sorted_data = sorted(zip(features, importance), 
-                               key=lambda x: x[1], 
-                               reverse=True)[:10]
-            
-            return jsonify({
-                'features': [item[0] for item in sorted_data],
-                'importance': [item[1] for item in sorted_data]
-            })
-    except Exception as e:
-        print(f"Error in feature importance API: {e}")
-        
-    # Fallback data if model not loaded or error occurs
-    return jsonify({
-        'features': [
-            'Academic Pressure',
-            'Social Connectedness',
-            'Sleep Duration',
-            'Physical Activity',
-            'Financial Stress'
-        ],
-        'importance': [0.25, 0.22, 0.18, 0.16, 0.15]
-    })
+    if feature_importance_data:
+        return jsonify(feature_importance_data)
+    else:
+        # Fallback data if model not loaded
+        return jsonify({
+            'features': ['Sleep Duration', 'Academic Pressure', 'Social Connectedness', 'Financial Stress', 'Physical Activity'],
+            'importance': [0.25, 0.22, 0.18, 0.20, 0.15]
+        })
 
 def preprocess_questionnaire_data(questionnaire_data):
     """Convert questionnaire responses to model features"""
@@ -351,6 +312,5 @@ def make_fallback_prediction(questionnaire_data):
 
 if __name__ == '__main__':
     # Production-ready settings
-    # debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
-    debug_mode = True
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     app.run(host='0.0.0.0', port=5000, debug=debug_mode)

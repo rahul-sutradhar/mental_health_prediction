@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+  <h2>Dashboard</h2>
+
+  <div class="stats">
+    <div class="card">
+      <h3>Average predicted score</h3>
+      <p>{{ stats.pred_mean | round(2) }}</p>
+    </div>
+    <div class="card">
+      <h3>Std dev</h3>
+      <p>{{ stats.pred_std | round(2) }}</p>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="predHist" width="600" height="250"></canvas>
+  </div>
+
+  <h3>Recent Submissions</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        {% for c in feature_cols[:6] %}
+        <th>{{ c }}</th>
+        {% endfor %}
+        <th>Actual</th>
+        <th>Predicted</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td>{{ r.timestamp }}</td>
+        {% for c in feature_cols[:6] %}
+        <td>{{ r[c] }}</td>
+        {% endfor %}
+        <td>{{ r.mental_health_condition }}</td>
+        <td>{{ r.predicted_mental_health }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<script>
+// Render histogram using stats passed from Flask
+const bins = {{ stats.hist_bins|tojson }};
+const counts = {{ stats.hist_counts|tojson }};
+const ctx = document.getElementById('predHist');
+if (ctx && bins.length>0) {
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: bins.slice(0,-1).map(b => b.toFixed(0)),
+      datasets: [{
+        label: 'Predicted Mental Health distribution',
+        data: counts
+      }]
+    },
+    options: { responsive: true }
+  });
+}
+</script>
+
+{% endblock %}

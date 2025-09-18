@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+  <h2>Quick Questionnaire</h2>
+  <form action="/predict" method="post" id="questionnaire">
+    <div class="grid">
+      {% for f in (feature_cols) %}
+      <div class="field">
+        <label for="{{ f }}">{{ f.replace('_',' ').capitalize() }}</label>
+        <input name="{{ f }}" id="{{ f }}" type="text" placeholder="Enter {{ f }}" required>
+      </div>
+      {% endfor %}
+      <div class="field full">
+        <label for="mental_health_condition">If you know your current mental health score (1-100), enter it (optional)</label>
+        <input name="mental_health_condition" id="mental_health_condition" type="number" min="1" max="100" step="1">
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Submit & Predict</button>
+    </div>
+  </form>
+</section>
+{% endblock %}
