@@ -31,19 +31,19 @@ def load_model():
     
     try:
         # Load model
-        with open('./models/xgb_mental_health_model.pkl', 'rb') as f:
+        with open('./models/xgboost_mental_health_model.pkl', 'rb') as f:
             model = pickle.load(f)
         
-        # # Load scaler
-        # with open('./models/feature_scaler.pkl', 'rb') as f:
-        #     scaler = pickle.load(f)
+        # Load scaler
+        with open('./models/feature_scaler.pkl', 'rb') as f:
+            scaler = pickle.load(f)
         
         # Load feature importance
-        # feature_importance_df = pd.read_csv('./models/feature_importance.csv')
-        # feature_importance_data = {
-        #     'features': feature_importance_df['feature'].tolist()[:5],  # Top 5 features
-        #     'importance': feature_importance_df['importance'].tolist()[:5]
-        # }
+        feature_importance_df = pd.read_csv('./models/feature_importance.csv')
+        feature_importance_data = {
+            'features': feature_importance_df['feature'].tolist()[:5],  # Top 5 features
+            'importance': feature_importance_df['importance'].tolist()[:5]
+        }
         
         print("Model loaded successfully!")
         

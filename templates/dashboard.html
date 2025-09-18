@@ -2,6 +2,26 @@
 
 {% block title %}Mental Health Assessment - Dashboard{% endblock %}
 
+{% block extra_head %}
+<!-- Additional Plotly.js CSS -->
+<style>
+#feature-importance-chart {
+    min-height: 400px;
+    width: 100%;
+    background: white;
+}
+.feature-importance-container {
+    position: relative;
+}
+.chart-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -39,8 +59,39 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <div class="stat-label">Prediction Model</div>
-                    <small class="text-muted">XGBoost ML Model</small>
+                    <small class="text-muted">{{ prediction.model_used }}</small>
                 </div>
+            </div>
+        </div>
+
+        <!-- Feature Importance Chart -->
+        <div class="notebook-cell mb-4">
+            <div class="cell-header">
+                <span class="cell-label">Feature Importance Analysis</span>
+            </div>
+            <div class="cell-content">
+                <div class="feature-importance-container">
+                    <div id="feature-importance-chart"></div>
+                    <div id="chart-loading" class="chart-loading d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <noscript>
+                        <div class="alert alert-warning text-center">
+                            JavaScript is required to view this chart.
+                        </div>
+                    </noscript>
+                    <div id="chart-error" style="display: none;" class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+                <h5 class="mb-3">Factors Influencing Your Mental Health Score</h5>
+                <p class="text-muted mt-3">
+                    This chart shows which factors have the most significant impact on mental health predictions
+                    according to our machine learning model.
+                </p>
             </div>
         </div>
 
@@ -85,21 +136,6 @@
             </div>
         </div>
         {% endif %}
-
-        <!-- Feature Importance Chart -->
-        <div class="notebook-cell mb-4">
-            <div class="cell-header">
-                <span class="cell-label">Feature Importance Analysis</span>
-            </div>
-            <div class="cell-content">
-                <h5 class="mb-3">Factors Influencing Your Mental Health Score</h5>
-                <div id="feature-importance-chart" style="height: 400px;"></div>
-                <p class="text-muted mt-3">
-                    This chart shows which factors have the most influence on mental health predictions 
-                    according to our machine learning model.
-                </p>
-            </div>
-        </div>
 
         <!-- Assessment Summary -->
         <div class="notebook-cell mb-4">
@@ -208,42 +244,41 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-// Initialize dashboard on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Load feature importance chart
-    loadFeatureImportance();
-    
-    // Animate stat cards
-    animateStatCards();
-});
 
-function loadFeatureImportance() {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/feature-importance')
         .then(response => response.json())
         .then(data => {
             createFeatureImportanceChart(data);
+            animateStatCards();
         })
-        .catch(error => {
-            console.error('Error loading feature importance:', error);
-            document.getElementById('feature-importance-chart').innerHTML = 
-                '<p class="text-muted text-center">Unable to load feature importance chart</p>';
+        .catch(err => {
+            console.error("Error fetching feature importance:", err);
+            // fallback empty chart if API fails
+            createFeatureImportanceChart({ features: [], importance: [] });
         });
-}
+    });
 
 function createFeatureImportanceChart(data) {
+    const chartContainer = document.getElementById('feature-importance-chart');
+    if (!chartContainer) return;
+
     const trace = {
         x: data.importance,
         y: data.features,
         type: 'bar',
         orientation: 'h',
         marker: {
-            color: ['#FF6B35', '#2E86AB', '#28A745', '#FFC107', '#6F42C1'],
+            color: data.importance.map((_, i) => {
+                const colors = ['#FF6B35', '#2E86AB', '#28A745', '#FFC107', '#6F42C1'];
+                return colors[i % colors.length];
+            }),
             opacity: 0.8
         },
-        text: data.importance.map(val => val.toFixed(2)),
+        text: data.importance.map(val => (val * 100).toFixed(1) + '%'),
         textposition: 'auto',
-        hovertemplate: '<b>%{y}</b><br>Importance: %{x:.2f}<extra></extra>'
+        hovertemplate: '<b>%{y}</b><br>Importance: %{text}<extra></extra>'
     };
     
     const layout = {
@@ -253,24 +288,27 @@ function createFeatureImportanceChart(data) {
         },
         xaxis: { 
             title: 'Importance Score',
-            range: [0, Math.max(...data.importance) * 1.1]
+            range: [0, Math.max(...data.importance) * 1.1],
+            tickformat: ',.1%'
         },
         yaxis: { 
             title: '',
             automargin: true
         },
-        margin: { l: 150, r: 50, t: 60, b: 50 },
+        margin: { l: 200, r: 50, t: 60, b: 50 },
         paper_bgcolor: 'white',
         plot_bgcolor: 'white',
-        font: { family: 'Inter, sans-serif' }
+        font: { family: 'Inter, sans-serif' },
+        showlegend: false
     };
     
     const config = {
         displayModeBar: false,
-        responsive: true
+        responsive: true,
+        staticPlot: false
     };
     
-    Plotly.newPlot('feature-importance-chart', [trace], layout, config);
+    Plotly.newPlot(chartContainer, [trace], layout, config);
 }
 
 function animateStatCards() {
