@@ -1,24 +1,25 @@
 /* Mental Health Assessment App - Jupyter Notebook Inspired Styling */
 
 :root {
-    --orange-primary: #FF6B35;
-    --blue-secondary: #2E86AB;
-    --bg-light: #F8F9FA;
-    --text-dark: #343A40;
-    --success-green: #28A745;
-    --code-purple: #6F42C1;
-    --warning-yellow: #FFC107;
-    --danger-red: #DC3545;
-    --primary-color: #4a90e2;
-    --secondary-color: #f5f6fa;
-    --success-color: #2ecc71;
-    --warning-color: #f1c40f;
-    --danger-color: #e74c3c;
-    --background-color: #ffffff;
-    --text-color: #2c3e50;
-    --border-color: #dee2e6;
+    --orange-primary: #064E3B;   /* Dark Green Primary */
+    --blue-secondary: #065F46;   /* Darker Green Secondary */
+    --bg-light: #F3F4F6;         /* Light Gray Background */
+    --text-dark: #1F2937;        /* Dark Gray Text */
+    --success-green: #16A34A;    /* Success Green */
+    --code-purple: #7C3AED;      /* Code Purple */
+    --warning-yellow: #F59E0B;   /* Warning Yellow */
+    --danger-red: #DC2626;       /* Danger Red */
+    --primary-color: #047857;    /* Primary Medium Green */
+    --secondary-color: #6B7280;  /* Gray Secondary */
+    --success-color: #10B981;    /* Success Light Green */
+    --warning-color: #FBBF24;    /* Lighter Warning Yellow */
+    --danger-color: #EF4444;     /* Bright Danger Red */
+    --background-color: #FFFFFF; /* White Background */
+    --text-color: #374151;       /* Gray Text */
+    --border-color: #D1D5DB;     /* Light Gray Border */
     --border-radius: 8px;
 }
+
 
 /* Dark mode variables */
 [data-theme="dark"] {
@@ -139,7 +140,7 @@ body {
 
 /* Button Styling */
 .btn-primary {
-    background: linear-gradient(135deg, var(--orange-primary), #ff8659);
+    background: linear-gradient(135deg, var(--orange-primary), #10B981);
     border: none;
     border-radius: 6px;
     font-weight: 500;
@@ -148,7 +149,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #e55a2b, var(--orange-primary));
+    background: linear-gradient(135deg, #10B981, var(--orange-primary));
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
 }
@@ -549,7 +550,7 @@ main {
 }
 
 .progress-bar {
-    background: linear-gradient(135deg, var(--orange-primary), #ff8659);
+    background: linear-gradient(135deg, var(--orange-primary), #10B981);
     transition: width 0.6s ease;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(255, 107, 53, 0.2);
